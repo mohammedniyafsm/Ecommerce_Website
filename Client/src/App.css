@@ -1,0 +1,20 @@
+/* Add this to your main CSS file */
+.fixed {
+    transition: all 0.3s ease-in-out;
+  }
+  
+  @keyframes pop-up {
+    0% {
+      transform: translateY(10px);
+      opacity: 0;
+    }
+    100% {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
+  
+  .group-hover\:animate-pop-up {
+    animation: pop-up 0.3s ease-in-out forwards;
+  }
+  
