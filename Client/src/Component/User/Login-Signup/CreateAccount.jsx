@@ -4,8 +4,11 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import axios from "axios";
 import { FiEye, FiEyeOff } from "react-icons/fi";
+import { useAuth } from '../../../context/store';
+
 
 function CreateAccount() {
+  const { storeTokenInLS } = useAuth(); 
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
@@ -34,6 +37,11 @@ function CreateAccount() {
         phone,
         password,
       });
+
+      if(response.data){
+        storeTokenInLS(data.token);
+        console.log(data.token);
+      }
 
       if (response.status === 200) {
         notifySuccess();
