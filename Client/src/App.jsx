@@ -8,6 +8,8 @@ import AdminHome from "./Pages/Admin/Homeadmin";
 import Navbaradmin from "./Component/Admin/Navbaradmin";
 import Cart from "./Pages/User/Cart";
 import SingleProduct from "./Pages/User/SingleProduct";
+import Account from './Component/User/Account';
+
 
 function App() {
   return ( 
@@ -21,6 +23,8 @@ function App() {
     <Route path="/emailVerification" element={<EmailOtp/>}/>
     <Route path="/cart" element={<Cart/>}/>
     <Route path="/productView" element={<SingleProduct/>}/>
+    <Route path="/account" element={<Account/>}/>
+
 
 
 
