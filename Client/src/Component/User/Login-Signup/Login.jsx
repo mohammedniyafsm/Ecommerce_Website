@@ -4,14 +4,12 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import axios from "axios";
 import { FiEye, FiEyeOff } from "react-icons/fi";
-import { useAuth } from "../../../context/store"; // Import useAuth from AuthContext
 
 function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
 
-  const { storeTokenInLS } = useAuth(); // Destructure the token storage function
   const navigate = useNavigate();
 
   const notifySuccess = () => toast.success("Login successful!");
@@ -25,8 +23,6 @@ function Login() {
         password,
       });
       if (response.status === 200) {
-        const { token } = response.data; // Extract token from the response
-        storeTokenInLS(token); // Store token in localStorage and state
         notifySuccess();
 
         console.log("Login successful:", response.data);

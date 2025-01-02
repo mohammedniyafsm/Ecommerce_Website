@@ -3,8 +3,10 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { useAuth} from '../../../context/store';  
 
 function EmailOtp() {
+  const { storeTokenInLS } = useAuth(); 
   const location = useLocation();
   const { email } = location.state || {}; // Retrieve email from state
   const [otp, setOtp] = useState("");
@@ -25,6 +27,8 @@ function EmailOtp() {
       });
 
       if (otpResponse.data.success) {
+        const {token} =otpResponse.data;
+        storeTokenInLS(token);
         notifySuccess("OTP Verified! Redirecting...");
         setTimeout(() => {
           navigate("/"); // Redirect after successful OTP verification
