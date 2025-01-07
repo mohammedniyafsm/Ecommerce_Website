@@ -1,10 +1,9 @@
 import React from 'react'
+import Navbar from '../../Component/User/Navbar'
 
 function Contact() {
   return (
-    <div>
-      <h1>contcat page</h1>
-    </div>
+    <Navbar/>
   )
 }
 

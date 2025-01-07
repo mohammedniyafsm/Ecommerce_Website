@@ -1,32 +1,31 @@
 const nodemailer = require('nodemailer');
 
+const sendOtpEmail = async (email, otp) => {
+  try {
+    const transporter = nodemailer.createTransport({
+      service: 'gmail', // Ensure you are using the correct service
+      auth: {
+        user: process.env.EMAIL, // Your email
+        pass: process.env.EMAIL_PASSWORD, // Your app password
+      },
+    });
 
-const sendOtpEmail=async(email, otp)=>{
-    try {
-        const transporter = nodemailer.createTransport({
-            service: 'gmail',
-            auth: {
-                // replace with your email and password
-                user: process.env.EMAIL,
-                pass: process.env.EMAIL_PASSWORD,
-            },
-        });
+    const mailOptions = {
+      from: `"MOMIN CLOTHING" <${process.env.EMAIL}>`,
+      to: email,
+      subject: 'MOMIN CLOTHING: Email Verification',
+      text: `${otp} is your MOMIN CLOTHING verification code. \n\nPlease enter this code to verify your email. \n\nThank you, \nMOMIN CLOTHING Team.`,
+    };
 
-        const mailOptions = {
-            from: `"Rox " <${process.env.EMAIL}>`,
-            to: email,
-            subject: 'Rox One_TIME OTP Verification',
-            text: `Your OTP is: ${otp}`,
-        };
+    const info = await transporter.sendMail(mailOptions);
+    console.log('Email sent: ' + info.response);
 
-        const info =
-            await transporter.sendMail(mailOptions);
-        console.log('Email sent: ' + info.response);
-    } catch (error) {
-        console.error('Error sending email:', error);
+    return { success: true, message: 'OTP email sent successfully.' };
+  } catch (error) {
+    console.error('Error sending email:', error);
 
-    }
+    return { success: false, message: 'Failed to send OTP email.', error };
+  }
+};
 
-}
-
-module.exports={sendOtpEmail};
+module.exports = { sendOtpEmail };
