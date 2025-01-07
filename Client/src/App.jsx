@@ -1,7 +1,7 @@
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Home from "./Pages/User/Home";
-import Login from "./Component/User/Login-Signup/Login";
-import Signup from "./Component/User/Login-Signup/CreateAccount";
+import UserLogin from './Pages/User/UserLogin';
+import Signup from './Pages/User/Signup';
 import EmailOtp from "./Component/User/Login-Signup/EmailOtp";
 import AdminHome from "./Pages/Admin/Homeadmin";
 import Cart from "./Pages/User/Cart";
@@ -14,7 +14,7 @@ function App() {
     <Router>
     <Routes>
     <Route path="/" element={<Home />} />
-    <Route path="/login" element={<Login />} />
+    <Route path="/login" element={<UserLogin />} />
     <Route path="/signup" element={<Signup />} />
     <Route path="/emailVerification" element={<EmailOtp/>}/>
     <Route path="/cart" element={<Cart/>}/>

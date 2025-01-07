@@ -4,6 +4,7 @@ import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useAuth} from '../../../context/store';  
+import Navbar from "../Navbar";
 
 function EmailOtp() {
   const { storeTokenInLS } = useAuth(); 
@@ -43,6 +44,8 @@ function EmailOtp() {
   };
 
   return (
+    <>
+    <Navbar/>
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
       <div className="w-96 p-6 bg-white rounded-lg shadow-lg">
         <h2 className="text-2xl font-bold text-center text-gray-800 mb-6">
@@ -98,6 +101,7 @@ function EmailOtp() {
       </div>
       <ToastContainer />
     </div>
+    </>
   );
 }
 

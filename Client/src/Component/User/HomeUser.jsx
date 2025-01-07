@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { banner } from '../../assests/assests';
-import Footer from '../../Component/User/Footer';
-import Option from '../../Component/User/Option';
-import ProductList from '../../Component/User/ProductList';
+
 
 function HomeUser() {
   const [currentBannerIndex, setCurrentBannerIndex] = useState(0);
@@ -23,11 +21,7 @@ function HomeUser() {
           alt={`Banner ${currentBannerIndex + 1}`}
           className="w-full h-full object-cover"
         />
-      </div>
-
-      <Option />
-      <ProductList/>
-      <Footer />
+      </div>  
     </div>
   );
 }
