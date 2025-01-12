@@ -30,9 +30,13 @@ const addCategory = async (req, res) => {
       res.status(500).json({ message: "Error while adding category", error: error.message });
     }
   };
-  
 
-// GET: Retrieve all categories
+
+
+  
+// <-------------------------------------------------------| RETRIEVE ALL CATEGORY | -------------------------------------------|>
+
+ 
 const getCategories = async (req, res) => {
     try {
         const categories = await Category.find(); // Fetch all categories
@@ -42,7 +46,9 @@ const getCategories = async (req, res) => {
     }
 };
 
-// PUT: Update a category by ID
+// <-------------------------------------------------------| UPDATING  CATEGORY | -------------------------------------------|>
+
+
 const updateCategory = async (req, res) => {
     try {
         const { id } = req.params; // Get category ID from URL
@@ -59,7 +65,11 @@ const updateCategory = async (req, res) => {
     }
 };
 
-// DELETE: Remove a category by ID
+
+
+// <-------------------------------------------------------| REMOVE ALL CATEGORY | -------------------------------------------|>
+
+
 const deleteCategory = async (req, res) => {
     try {
         const { id } = req.params; // Get category ID from URL
