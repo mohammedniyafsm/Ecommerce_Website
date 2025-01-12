@@ -19,7 +19,7 @@ function App() {
     <Route path="/signup" element={<Signup />} />
     <Route path="/emailVerification" element={<EmailOtp/>}/>
     <Route path="/cart" element={<Cart/>}/>
-    <Route path="/productView" element={<SingleProduct/>}/>
+    <Route path="/productView/:id" element={<SingleProduct/>}/>
     <Route path="/account" element={<Account/>}/>
 
     {/* admin pages */}
