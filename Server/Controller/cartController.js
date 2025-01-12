@@ -62,3 +62,6 @@ const getCart = async (req, res) => {
       res.status(500).json({ message: 'Error adding product to cart', error });
     }
   };
+
+
+  module.exports = { getCart, addToCart };
