@@ -1,32 +1,31 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { useParams } from 'react-router-dom';  // Import useParams to get the product ID from the URL
+import { useParams } from 'react-router-dom';
 
 function ProductView() {
-  const { id } = useParams();  // Get product ID from the URL
-  const [product, setProduct] = useState(null);  // State to store product data
-  const [loading, setLoading] = useState(true);  // State to manage loading status
-  const [error, setError] = useState(null);  // State to handle errors
-  const [mainImage, setMainImage] = useState(null);  // State to manage the main image
+  const { id } = useParams();
+  const [product, setProduct] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [mainImage, setMainImage] = useState(null);
+  const [quantity, setQuantity] = useState(1); // State for quantity
 
-  // Fetch product details based on product ID
   useEffect(() => {
     const fetchProduct = async () => {
       try {
         const response = await axios.get(`http://localhost:3000/api/user/productView/${id}`);
-        setProduct(response.data);  // Set product data
-        setMainImage(response.data.images[0]?.url);  // Set the first image as the main image
-        setLoading(false);  // Update loading state
+        setProduct(response.data);
+        setMainImage(response.data.images[0]?.url);
+        setLoading(false);
       } catch (error) {
         setError('Failed to fetch product details');
-        setLoading(false);  // Update loading state
+        setLoading(false);
       }
     };
 
     fetchProduct();
   }, [id]);
 
-  // Return loading or error message while fetching data
   if (loading) {
     return <div>Loading...</div>;
   }
@@ -35,9 +34,20 @@ function ProductView() {
     return <div>{error}</div>;
   }
 
-  // Handle image click to change the main image
   const handleImageClick = (imageUrl) => {
     setMainImage(imageUrl);
+  };
+
+  // Handle incrementing quantity
+  const incrementQuantity = () => {
+    setQuantity((prevQuantity) => prevQuantity + 1);
+  };
+
+  // Handle decrementing quantity
+  const decrementQuantity = () => {
+    if (quantity > 1) {
+      setQuantity((prevQuantity) => prevQuantity - 1);
+    }
   };
 
   return (
@@ -51,7 +61,7 @@ function ProductView() {
               className="w-20 h-20 border cursor-pointer"
               src={image.url}
               alt={`View ${index + 1}`}
-              onClick={() => handleImageClick(image.url)}  // Update main image on click
+              onClick={() => handleImageClick(image.url)}
             />
           ))}
         </div>
@@ -85,9 +95,9 @@ function ProductView() {
             </select>
           </div>
           <div className="mt-4 flex items-center gap-2">
-            <button className="border px-2">-</button>
-            <input type="text" value="1" className="w-12 text-center border" />
-            <button className="border px-2">+</button>
+            <button className="border px-2" onClick={decrementQuantity}>-</button>
+            <input type="text" value={quantity} className="w-12 text-center border" readOnly />
+            <button className="border px-2" onClick={incrementQuantity}>+</button>
           </div>
           <button className="mt-4 bg-black text-white p-2 w-full">ADD TO CART</button>
           <div className="mt-4 flex gap-2">
