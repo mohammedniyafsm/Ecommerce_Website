@@ -3,6 +3,7 @@ import FilterAltOutlinedIcon from "@mui/icons-material/FilterAltOutlined";
 import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore"; // Arrow icon for expand
 import axios from "axios";
+import { useAuth } from "../../context/store";
 
 function Product() {
   const [productNameOpen, setProductNameOpen] = useState(false);
@@ -27,11 +28,18 @@ function Product() {
     if (field === "status") setStatusOpen(!statusOpen);
     if (field === "price") setPriceOpen(!priceOpen);
   };
+  
+  const { token } = useAuth();
+
 
   useEffect(() => {
     const fetchProduct = async () => {
       try {
-        const response = await axios.get("http://localhost:3000/api/admin/product");
+        const response = await axios.get("http://localhost:3000/api/admin/product", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
         setProducts(response.data);
       } catch (error) {
         console.error("Error fetching product:", error);
@@ -54,7 +62,10 @@ function Product() {
 
     try {
       const response = await axios.post("http://localhost:3000/api/admin/addProduct", formData, {
-        headers: { "Content-Type": "multipart/form-data" },
+        headers: {
+          "Content-Type": "multipart/form-data",
+          Authorization: `Bearer ${token}`,
+        },
       });
       console.log("Product added successfully:", response.data);
       alert("Product added successfully!");

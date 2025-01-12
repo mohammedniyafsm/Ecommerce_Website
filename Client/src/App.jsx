@@ -7,6 +7,7 @@ import AdminHome from "./Pages/Admin/Homeadmin";
 import Cart from "./Pages/User/Cart";
 import SingleProduct from "./Pages/User/SingleProduct";
 import Account from './Component/User/Account';
+import AllProduct from './Pages/Admin/AllProduct';
 
 
 function App() {
@@ -23,6 +24,7 @@ function App() {
 
     {/* admin pages */}
     <Route path="/adminHome" element={<AdminHome />} />
+    <Route path="/products" element={<AllProduct />} />
     </Routes>
     </Router>
    

@@ -10,11 +10,11 @@ import LoyaltyOutlinedIcon from '@mui/icons-material/LoyaltyOutlined';
 import TrendingUpOutlinedIcon from '@mui/icons-material/TrendingUpOutlined';
 import NotificationsNoneOutlinedIcon from '@mui/icons-material/NotificationsNoneOutlined';
 import SettingsOutlinedIcon from '@mui/icons-material/SettingsOutlined';
-import Category from '../../Pages/Admin/Category';
-import Customer from '../../Pages/Admin/Customer';
-import Product from '../../Pages/Admin/Product';
-import Order from '../../Pages/Admin/Order'; // Assuming you have an Order component
-import Sales from '../../Pages/Admin/Sale';
+import Category from '../../Component/Admin/Category';
+import Customer from '../../Component/Admin/Customer';
+import Product from '../../Component/Admin/Product';
+import Order from '../../Component/Admin/Order'; // Assuming you have an Order component
+import Sales from '../../Component/Admin/Sale';
 
 function Navbaradmin() {
   const [dashboardOpen, setDashboardOpen] = useState(false);

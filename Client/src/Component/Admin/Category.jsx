@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import FilterAltOutlinedIcon from "@mui/icons-material/FilterAltOutlined";
 import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
 import axios from "axios";
+import { useAuth } from "../../context/store";
+
 
 function Category() {
   const [categories, setCategories] = useState([]);
@@ -14,9 +16,15 @@ function Category() {
     fetchCategories();
   }, []);
 
+  const {token} =useAuth();
+ 
   const fetchCategories = async () => {
     try {
-      const response = await axios.get("http://localhost:3000/api/admin/categories");
+      const response = await axios.get("http://localhost:3000/api/admin/categories",{
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       setCategories(response.data);
     } catch (error) {
       console.error("Error fetching categories:", error);
@@ -33,6 +41,7 @@ function Category() {
     try {
       await axios.post("http://localhost:3000/api/admin/addCategory", formData, {
         headers: {
+          Authorization: `Bearer ${token}`,
           "Content-Type": "multipart/form-data",
         },
       });
@@ -48,24 +57,37 @@ function Category() {
   // Delete a category
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`http://localhost:3000/api/admin/categories/${id}`);
+      await axios.delete(`http://localhost:3000/api/admin/categories/${id}`,{
+        headers: {
+          "Content-Type": "multipart/form-data",
+          Authorization: `Bearer ${token}`,
+        },
+      });
       fetchCategories();
     } catch (error) {
       console.error("Error deleting category:", error);
     }
   };
 
-  // Toggle category active/inactive status
-  const handleAction = async (id, currentStatus) => {
-    try {
-      await axios.put(`http://localhost:3000/api/admin/categories/${id}`, {
-        active: !currentStatus,
-      });
-      fetchCategories();
-    } catch (error) {
-      console.error("Error updating category status:", error);
-    }
-  };
+ 
+const handleAction = async (id, currentStatus) => {
+  try {
+    await axios.put(
+      `http://localhost:3000/api/admin/categories/${id}`,
+      { active: !currentStatus }, // Correctly passing the request body
+      {
+        headers: {
+          "Content-Type": "application/json", // Change to application/json if not uploading files
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    fetchCategories(); // Refresh the category list after updating
+  } catch (error) {
+    console.error("Error updating category status:", error.response?.data || error.message);
+  }
+};
+
 
   return (
     <div className="px-2 py-2">
