@@ -2,6 +2,74 @@ const Category = require('../Model/categorySchema');
 const Product = require('../Model/productSchema');
 
 
+// ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^//
+// <                             <$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ USER SIDE $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$>                            > //
+// vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv//
+
+
+
+ // <-------------------------------------------------------| GET PRODUCT | -------------------------------------------|>
+
+const allProduct =async (req,res)=>{
+  try {
+    const product = await Product.find(); // Fetch all categories
+    res.status(200).json(product);
+  } catch (error) {
+    res.status(500).json({ message: "Error while fetching PRODUCT", error: error.message });
+  }
+}
+
+
+// <-------------------------------------------------------| RENDERING PRODUCTS ACCORDING TO THE CATEGORIES -----------------------------------|>
+
+const productLoad = async (req, res) => {
+  try {
+    const categoryName = req.params.categoryName; // Get the category name from the URL
+    const category = await Category.findOne({ categoryName }); // Find the category by name
+
+    if (!category) {
+      return res.status(404).json({ message: "Category not found" });
+    }
+
+    const products = await Product.find({ category: category._id }); // Fetch products by category ID
+
+    if (products.length === 0) {
+      return res.status(404).json({ message: "No products found in this category" });
+    }
+
+    res.status(200).json(products); // Send back the products
+  } catch (error) {
+    console.log("Error loading products by category:", error.message);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
+
+// <-------------------------------------------------------| RENDERING DETAILED VIEW OF A  PRODUCTS -------------------------------------------|>
+const productSingleView = async (req, res) => {
+  try {
+    const id = req.params.id;
+    
+    const product = await Product.findById(id);
+
+    if (!product) {
+      return res.status(404).json({ message: "Product not found" });
+    }
+    res.status(200).json(product);
+    
+  } catch (error) {
+    console.log("Try catch error in productSingleView 🤷‍♀️📀🤷‍♂️");
+    console.log(error.message);
+
+    // Handle errors gracefully
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
+
+
+
+
 
 // ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^//
 // <                             <$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ ADMIN SIDE $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$>                            > //
@@ -67,6 +135,9 @@ const addProduct = async (req, res) => {
   }
 };
 
+       // <-------------------------------------------------------| GET ALL PRODUCT | -------------------------------------------|>
+
+
 const getProduct=async(req,res)=>{
   try {
     const product = await Product.find(); // Fetch all categories
@@ -76,4 +147,4 @@ const getProduct=async(req,res)=>{
   }
 }
 
-module.exports = { addProduct,getProduct };
+module.exports = { addProduct,getProduct,allProduct,productLoad,productSingleView};
