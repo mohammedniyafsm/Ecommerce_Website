@@ -1,45 +1,60 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { FaFilter, FaSearch, FaHeart } from 'react-icons/fa'; // Ensure you have react-icons installed
-import { pic } from '../../assests/assests';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 function ProductList() {
   const navigate = useNavigate();
   const [selectedCategory, setSelectedCategory] = useState('All Products');
+  const [products, setProducts] = useState([]);
   const [visibleCount, setVisibleCount] = useState(4);
 
   const categories = ['All Products', 'Women', 'Men', 'Bags', 'Shoes', 'Watches'];
-  const products = [
-    { name: 'Esprit Ruffle Shirt', price: 16.64, image: pic.d1 },
-    { name: 'Herschel Supply', price: 35.31, image: pic.d1 },
-    { name: 'Only Check Trouser', price: 25.50, image: pic.d1 },
-    { name: 'Classic Trench Coat', price: 75.00, image: pic.d1 },
-    { name: 'Esprit Ruffle Shirt', price: 16.64, image: pic.d1 },
-    { name: 'Herschel Supply', price: 35.31, image: pic.d1 },
-    { name: 'Only Check Trouser', price: 25.50, image: pic.d1 },
-    { name: 'Classic Trench Coat', price: 75.00, image: pic.d1 },
-  ];
 
-  const loadMoreProducts = () => {
-    setVisibleCount(prevCount => prevCount + 16);
+  // Fetch products from the backend
+  const fetchProducts = async (category) => {
+    try {
+      let response;
+      if (category === 'All Products') {
+        response = await axios.get('http://localhost:3000/api/user/allProduct'); // Fetch all products
+        console.log("response",response);
+        
+      } else {
+        response = await axios.get(`http://localhost:3000/api/user/product/${category}`); // Fetch products by category
+      }
+      setProducts(response.data);
+    } catch (error) {
+      console.error('Error fetching products:', error.message);
+    }
   };
 
-  const handleQuickView = () => {
-    navigate('/productView');
+  // Handle category change
+  useEffect(() => {
+    fetchProducts(selectedCategory);
+  }, [selectedCategory]);
+
+  const loadMoreProducts = () => {
+    setVisibleCount((prevCount) => prevCount + 16);
+  };
+
+  const handleQuickView = (productId) => {
+    navigate(`/productView/${productId}`); // Navigate to product details page
   };
 
   return (
-    <div className='w-screen min-h-screen px-44 mt-14'>
+    <div className="w-screen min-h-screen px-44 mt-14">
       <div className="">
-        <h1 className='font-bold text-4xl text-neutral-800'>PRODUCT OVERVIEW</h1>
+        <h1 className="font-bold text-4xl text-neutral-800">PRODUCT OVERVIEW</h1>
       </div>
       <div className="flex justify-between items-center mt-8">
         <div className="flex gap-8">
-          {categories.map(category => (
+          {categories.map((category) => (
             <h1
               key={category}
               onClick={() => setSelectedCategory(category)}
-              className={`cursor-pointer text-gray-400 hover:text-gray-900 ${selectedCategory === category ? 'text-neutral-800 border-b-2 border-neutral-800' : ''}`}
+              className={`cursor-pointer text-gray-400 hover:text-gray-900 ${
+                selectedCategory === category ? 'text-neutral-800 border-b-2 border-neutral-800' : ''
+              }`}
             >
               {category}
             </h1>
@@ -56,16 +71,16 @@ function ProductList() {
       </div>
 
       <div className="mt-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 pl-4">
-        {products.slice(0, visibleCount).map((product, index) => (
-          <div className="relative group" key={index}>
+        {products.slice(0, visibleCount).map((product) => (
+          <div className="relative group" key={product._id}>
             <div className="overflow-hidden">
               <img
-                src={product.image} // Replace with actual product image path
+                src={product.images[0].url} // Replace with actual product image path
                 alt={product.name}
                 className="w-[260px] h-[335px] object-cover transform transition-transform duration-300 group-hover:scale-110"
               />
               <button
-                onClick={handleQuickView}
+                onClick={() => handleQuickView(product._id)}
                 className="absolute inset-0 mx-24 mt-72 bg-white text-gray-800 border h-10 rounded-3xl w-24 border-gray-300 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity duration-300 hover:bg-black hover:text-white"
               >
                 Quick View
