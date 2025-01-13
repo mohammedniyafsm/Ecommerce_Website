@@ -1,7 +1,50 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
+import { useAuth } from '../../context/store'; 
 import { pic } from '../../assests/assests'; // Make sure the path is correct
 
 function UserCart() {
+  const [cartItems, setCartItems] = useState([]);
+  const [subtotal, setSubtotal] = useState(0);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  const { token } = useAuth();
+
+
+  useEffect(() => {
+    const fetchCart = async () => {
+      try {
+        const response = await axios.get('http://localhost:3000/api/user/cart', {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        console.log('API Response:', response.data);
+
+        const { items, totalAmount } = response.data;
+
+        // Safeguard to ensure proper values
+        setCartItems(items || []);
+        setSubtotal(typeof totalAmount === 'number' ? totalAmount : 0);
+        setLoading(false);
+      } catch (err) {
+        console.error('Error fetching cart data:', err);
+        setError('Failed to fetch cart data');
+        setLoading(false);
+      }
+    };
+
+    fetchCart();
+  }, [token]);
+
+  if (loading) {
+    return <div>Loading cart...</div>;
+  }
+
+  if (error) {
+    return <div>{error}</div>;
+  }
   
   return (
     <div className="mt-24">
@@ -15,19 +58,23 @@ function UserCart() {
               <h1>QUANTITY</h1>
               <h1>TOTAL</h1>
             </div>
-            <div className="flex justify-between px-10 py-4 border-b items-center">
+            {cartItems.map((item ,index)=>{
+              return(
+            <div className="flex justify-between px-10 py-4 border-b items-center" key={item.product._id}>
               <div className="flex items-center gap-4">
-                <img className="h-20 w-16" src={pic.d1} alt="Strawberries" />
-                <h1 className="">Strawberries</h1>
+                <img className="h-20 w-16" src={item.product.images[0]?.url} alt="Strawberries" />
+                <h1 className="">{item.product.name}</h1>
               </div>
-              <h1>$36.00</h1>
+              <h1>{item.product.price}</h1>
               <div className="flex items-center gap-2">
                 <button className="border px-2">-</button>
                 <input type="text" value="1" className="w-8 text-center border" />
                 <button className="border px-2">+</button>
               </div>
-              <h1>$36.00</h1>
+              <h1>{item.product.price}</h1>
             </div>
+            )
+            })}
             <div className="px-10 py-4 flex justify-between">
               <input type="text" placeholder="Coupon Code" className="border p-2 rounded-3xl" />
               <button className="bg-gray-200 p-2 rounded-3xl">APPLY COUPON</button>
