@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
+import {useAuth} from '../../context/store';
 
 function ProductView() {
   const { id } = useParams();
@@ -9,6 +10,8 @@ function ProductView() {
   const [error, setError] = useState(null);
   const [mainImage, setMainImage] = useState(null);
   const [quantity, setQuantity] = useState(1); // State for quantity
+
+  const {token} =useAuth();
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -33,6 +36,21 @@ function ProductView() {
   if (error) {
     return <div>{error}</div>;
   }
+
+  const handleAddCart = async (productId) => {
+    try {
+      await axios.post( `http://localhost:3000/api/user/cart`, { productId, quantity },{
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      alert('Product added to cart successfully!');
+    } catch (error) {
+      setError('Failed to add product to cart');
+    }
+  };
 
   const handleImageClick = (imageUrl) => {
     setMainImage(imageUrl);
@@ -99,7 +117,7 @@ function ProductView() {
             <input type="text" value={quantity} className="w-12 text-center border" readOnly />
             <button className="border px-2" onClick={incrementQuantity}>+</button>
           </div>
-          <button className="mt-4 bg-black text-white p-2 w-full">ADD TO CART</button>
+          <button className="mt-4 bg-black text-white p-2 w-full " onClick={()=>handleAddCart(product._id)}>ADD TO CART</button>
           <div className="mt-4 flex gap-2">
             <button className="border p-2 w-full">Share</button>
             <button className="border p-2 w-full">Like</button>
