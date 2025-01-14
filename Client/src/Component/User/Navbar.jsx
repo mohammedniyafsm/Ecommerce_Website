@@ -29,7 +29,7 @@ function Navbar() {
       <div className="flex gap-6 text-gray-600 cursor-pointer items-center">
         <SearchIcon />
         <ShoppingCartIcon onClick={() => navigate('/cart')} />
-        <FavoriteBorderIcon />
+        <FavoriteBorderIcon  onClick={() => navigate('/wishList')}/>
         <PermIdentityIcon onClick={() => navigate('/account')} />
         {/* Conditional Rendering for Login/Logout */}
         {isLoggedIn ? (
