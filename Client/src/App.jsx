@@ -9,6 +9,7 @@ import SingleProduct from "./Pages/User/SingleProduct";
 import Account from './Component/User/Account';
 import AllProduct from './Pages/Admin/AllProduct';
 import AllProductList from './Pages/User/AllProductList';
+import WishlistPage from './Pages/User/WishlistPage';
 
 
 function App() {
@@ -22,7 +23,8 @@ function App() {
     <Route path="/cart" element={<Cart/>}/>
     <Route path="/productView/:id" element={<SingleProduct/>}/>
     <Route path="/account" element={<Account/>}/>
-    <Route path="/product" element={<AllProductList/>}/>
+    <Route path="/shop" element={<AllProductList/>}/>
+    <Route path="/wishList" element={<WishlistPage/>}/>
 
     {/* admin pages */}
     <Route path="/adminHome" element={<AdminHome />} />
