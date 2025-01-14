@@ -14,6 +14,11 @@ const {
     getCart,
     addToCart,
 } = require('../Controller/cartController');
+const {
+    productAddToWishlist,
+    removeWishlistProduct,
+    getWishlist,
+} = require('../Controller/wishListController');
 
 const {protect}=require('../Middleware/AuthMiddleware');
 
@@ -29,6 +34,10 @@ router.route('/productView/:id').get(productSingleView);  //RENDERING DETAILS OF
 
 router.route('/cart').get(protect,getCart); //Getting  Cart
 router.route('/cart').post(protect,addToCart); //Adding cart
+
+router.route('/wishlist').get(protect,getWishlist); //Getting  wishlist
+router.route('/wishlist/:id').post(protect,productAddToWishlist); //Adding wishlist
+router.route('/wishlist/:id').delete(protect,removeWishlistProduct); //Deleting wishlist
 
 
 
