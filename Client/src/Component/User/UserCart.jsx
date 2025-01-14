@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useAuth } from '../../context/store'; 
-import { pic } from '../../assests/assests'; // Make sure the path is correct
 
 function UserCart() {
   const [cartItems, setCartItems] = useState([]);
@@ -54,7 +53,7 @@ function UserCart() {
           <div className="w-[720px] min-h-[240px] max-h-max mt-20 border border-gray-200">
             <div className="flex px-10 py-4 gap-24 font-bold text-gray-700 border-b">
               <h1>PRODUCT</h1>
-              <h1 className="ml-24">PRICE</h1>
+              <h1 className="ml-24">PRICE</h1> 
               <h1>QUANTITY</h1>
               <h1>TOTAL</h1>
             </div>
