@@ -1,17 +1,23 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useAuth } from '../../context/store';
+import { useNavigate } from 'react-router-dom';
 
 function UserCart() {
   const [cartItems, setCartItems] = useState([]);
   const [subtotal, setSubtotal] = useState(0);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const navigate = useNavigate();
 
   const { token } = useAuth();
 
   useEffect(() => {
     const fetchCart = async () => {
+      if (!token){
+        navigate('/login');
+        return;
+      }
       try {
         const response = await axios.get('http://localhost:3000/api/user/cart', {
           headers: {
