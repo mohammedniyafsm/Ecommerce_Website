@@ -1,6 +1,8 @@
 import React from 'react';
 import Navbar from '../../Component/User/Navbar';
 import UserCart from '../../Component/User/UserCart';
+import Footer from '../../Component/User/Footer';
+
 
 function Cart() {
   
@@ -8,6 +10,7 @@ function Cart() {
     <>
     <Navbar/>
     <UserCart/>
+    <Footer/>
     </>
   );
 }
