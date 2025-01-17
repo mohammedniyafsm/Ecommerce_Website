@@ -1,51 +1,79 @@
 import React, { useState, useEffect } from 'react';
-import { FaFilter, FaSearch, FaHeart } from 'react-icons/fa'; // Ensure you have react-icons installed
+import { FaFilter, FaSearch, FaHeart, FaRegHeart } from 'react-icons/fa'; // Include outline heart icon
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
-function AllProduct() {
-  const navigate = useNavigate();
+const AllProduct = () => {
   const [selectedCategory, setSelectedCategory] = useState('All Products');
   const [products, setProducts] = useState([]);
   const [visibleCount, setVisibleCount] = useState(4);
+  const [wishlist, setWishlist] = useState([]);
+  const token = localStorage.getItem('token'); // Retrieve token
+
+  const navigate = useNavigate();
+
 
   const categories = ['All Products', 'Women', 'Men', 'Bags', 'Shoes', 'Watches'];
 
-  // Fetch products from the backend
+  useEffect(() => {
+    fetchProducts(selectedCategory);
+  }, [selectedCategory]);
+
+  useEffect(() => {
+    fetchWishlist();
+  }, []);
+
   const fetchProducts = async (category) => {
     try {
-      let response;
-      if (category === 'All Products') {
-        response = await axios.get('http://localhost:3000/api/user/allProduct'); // Fetch all products
-        console.log("response",response);
-        
-      } else {
-        response = await axios.get(`http://localhost:3000/api/user/product/${category}`); // Fetch products by category
-      }
+      const endpoint =
+        category === 'All Products'
+          ? 'http://localhost:3000/api/user/allProduct'
+          : `http://localhost:3000/api/user/product/${category}`;
+      const response = await axios.get(endpoint);
       setProducts(response.data);
     } catch (error) {
       console.error('Error fetching products:', error.message);
     }
   };
 
-  // Handle category change
-  useEffect(() => {
-    fetchProducts(selectedCategory);
-  }, [selectedCategory]);
-
-  const loadMoreProducts = () => {
-    setVisibleCount((prevCount) => prevCount + 16);
+  const fetchWishlist = async () => {
+    try {
+      const response = await axios.get('http://localhost:3000/api/user/wishlist', {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      setWishlist(response.data.items.map((item) => item.product._id));
+    } catch (error) {
+      console.error('Error fetching wishlist:', error.message);
+    }
   };
 
-  const handleQuickView = (productId) => {
-    navigate(`/productView/${productId}`); // Navigate to product details page
+  const toggleWishlist = async (productId) => {
+    try {
+      const isWishlisted = wishlist.includes(productId);
+      const method = isWishlisted ? 'delete' : 'post';
+      const endpoint = `http://localhost:3000/api/user/wishlist/${productId}`;
+      
+      await axios({
+        method,
+        url: endpoint,
+        headers: { Authorization: `Bearer ${token}` },
+      });
+  
+      setWishlist((prev) =>
+        isWishlisted ? prev.filter((id) => id !== productId) : [...prev, productId]
+      );
+    } catch (error) {
+      console.error(`Error toggling wishlist: ${error.message}`);
+    }
   };
+
+
+  const loadMoreProducts = () => setVisibleCount((prevCount) => prevCount + 16);
+
+  const handleQuickView = (productId) => navigate(`/productView/${productId}`);
 
   return (
     <div className="w-screen min-h-screen px-44 mt-36">
-      {/* <div className="">
-        <h1 className="font-bold text-4xl text-neutral-800">PRODUCT OVERVIEW</h1>
-      </div> */}
       <div className="flex justify-between items-center mt-8">
         <div className="flex gap-8">
           {categories.map((category) => (
@@ -75,7 +103,7 @@ function AllProduct() {
           <div className="relative group" key={product._id}>
             <div className="overflow-hidden">
               <img
-                src={product.images[0].url} // Replace with actual product image path
+                src={product.images[0].url}
                 alt={product.name}
                 className="w-[260px] h-[335px] object-cover transform transition-transform duration-300 group-hover:scale-110"
               />
@@ -86,10 +114,13 @@ function AllProduct() {
                 Quick View
               </button>
             </div>
-            <div className="flex justify-between items-center mt-2">
+            <div className="w-64 flex justify-between items-center mt-2">
               <h2 className="font-semibold">{product.name}</h2>
-              <button className="text-gray-500 hover:text-red-500">
-                <FaHeart />
+              <button
+                className="text-gray-500 hover:text-red-500"
+                onClick={() => toggleWishlist(product._id)}
+              >
+                {wishlist.includes(product._id) ? <FaHeart /> : <FaRegHeart />}
               </button>
             </div>
             <p className="text-gray-500">${product.price.toFixed(2)}</p>
@@ -109,6 +140,6 @@ function AllProduct() {
       )}
     </div>
   );
-}
+};
 
 export default AllProduct;
