@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { FaFilter, FaSearch, FaHeart, FaRegHeart } from 'react-icons/fa'; // Include outline heart icon
 import { useNavigate } from 'react-router-dom';
+import {useAuth} from '../../context/store';
 import axios from 'axios';
 
 const AllProduct = () => {
@@ -8,10 +9,11 @@ const AllProduct = () => {
   const [products, setProducts] = useState([]);
   const [visibleCount, setVisibleCount] = useState(4);
   const [wishlist, setWishlist] = useState([]);
-  const token = localStorage.getItem('token'); // Retrieve token
+  const [searchVisible, setSearchVisible] = useState(false); // Search form visibility
+  const [searchQuery, setSearchQuery] = useState(''); // Search query
+  const {token} =useAuth();
 
   const navigate = useNavigate();
-
 
   const categories = ['All Products', 'Women', 'Men', 'Bags', 'Shoes', 'Watches'];
 
@@ -67,14 +69,18 @@ const AllProduct = () => {
     }
   };
 
-
   const loadMoreProducts = () => setVisibleCount((prevCount) => prevCount + 16);
 
   const handleQuickView = (productId) => navigate(`/productView/${productId}`);
 
+  // Filter products based on search query
+  const filteredProducts = products.filter((product) =>
+    product.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
+    product.description.toLowerCase().includes(searchQuery.toLowerCase())  );
+
   return (
     <div className="w-screen min-h-screen px-44 mt-36">
-       <div className="">
+      <div className="">
         <h1 className="font-bold text-4xl text-neutral-800">PRODUCT OVERVIEW</h1>
       </div>
       <div className="flex justify-between items-center mt-8">
@@ -92,17 +98,39 @@ const AllProduct = () => {
           ))}
         </div>
         <div className="flex gap-4">
-          <button className="border border-gray-300 text-gray-600 px-4 py-2 rounded flex items-center gap-2 hover:bg-blue-500 hover:text-white">
+          <button
+            className="border border-gray-300 text-gray-600 px-4 py-2 rounded flex items-center gap-2 hover:bg-blue-500 hover:text-white"
+          >
             <FaFilter className="hover:text-white" /> Filter
           </button>
-          <button className="border border-gray-300 text-gray-500 px-4 py-2 rounded flex items-center gap-2 hover:bg-blue-500 hover:text-white">
+          <button
+            onClick={() => {
+              setSearchVisible((prevVisible) => {
+                if (prevVisible) setSearchQuery(''); // Clear search query when closing
+                return !prevVisible; // Toggle visibility
+              });
+            }}
+            className="border border-gray-300 text-gray-500 px-4 py-2 rounded flex items-center gap-2 hover:bg-blue-500 hover:text-white"
+          >
             <FaSearch className="hover:text-white" /> Search
           </button>
         </div>
       </div>
 
+      {searchVisible && (
+        <div className="mt-4">
+          <input
+            type="text"
+            placeholder="Search products..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="w-full border px-4 py-2 rounded"
+          />
+        </div>
+      )}
+
       <div className="mt-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 pl-4">
-        {products.slice(0, visibleCount).map((product) => (
+        {filteredProducts.slice(0, visibleCount).map((product) => (
           <div className="relative group" key={product._id}>
             <div className="overflow-hidden">
               <img
@@ -131,7 +159,7 @@ const AllProduct = () => {
         ))}
       </div>
 
-      {visibleCount < products.length && (
+      {visibleCount < filteredProducts.length && (
         <div className="flex justify-center my-28">
           <button
             onClick={loadMoreProducts}
