@@ -13,6 +13,7 @@ const {
 const {
     getCart,
     addToCart,
+    deleteCartItem,
 } = require('../Controller/cartController');
 const {
     productAddToWishlist,
@@ -34,6 +35,7 @@ router.route('/productView/:id').get(productSingleView);  //RENDERING DETAILS OF
 
 router.route('/cart').get(protect,getCart); //Getting  Cart
 router.route('/cart').post(protect,addToCart); //Adding cart
+router.route('/cart/:productId').delete(protect,deleteCartItem); //Delete cart
 
 router.route('/wishlist').get(protect,getWishlist); //Getting  wishlist
 router.route('/wishlist/:id').post(protect,productAddToWishlist); //Adding wishlist
