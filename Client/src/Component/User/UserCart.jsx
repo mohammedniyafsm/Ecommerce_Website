@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useAuth } from '../../context/store';
 import { useNavigate } from 'react-router-dom';
+import { MdDelete } from "react-icons/md";
+
 
 function UserCart() {
   const [cartItems, setCartItems] = useState([]);
@@ -46,6 +48,28 @@ function UserCart() {
     fetchCart();
   }, [token]);
 
+  const handleDelete = async (id) => {
+    try {
+      await axios.delete(`http://localhost:3000/api/user/cart/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+  
+      // Update the cart items state
+      setCartItems((prevItems) =>
+        prevItems.filter((item) => item.product._id !== id)
+      );
+  
+      // Recalculate subtotal
+      calculateSubtotal();
+    } catch (err) {
+      console.error('Error deleting product:', err);
+      setError('Failed to delete product');
+    }
+  };
+  
+
   const handleQuantityChange = (id, increment) => {
     setCartItems(prevItems =>
       prevItems.map(item =>
@@ -89,9 +113,12 @@ function UserCart() {
           <div className="w-[720px] min-h-[240px] max-h-max mt-20 border border-gray-200">
             <div className="flex px-10 py-4 gap-24 font-bold text-gray-700 border-b">
               <h1>PRODUCT</h1>
-              <h1 className="ml-24">PRICE</h1>
-              <h1>QUANTITY</h1>
-              <h1>TOTAL</h1>
+              <div className="flex justify-around gap-16 pl-16">
+              <h1 className="ml-4">PRICE</h1>
+              <h1 className=''>QUANTITY</h1>
+              <h1 className=''>TOTAL</h1>
+              </div>
+              <h1></h1>
             </div>
             {cartItems.map(item => (
               <div
@@ -104,9 +131,9 @@ function UserCart() {
                     src={item.product.images[0]?.url}
                     alt={item.product.name}
                   />
-                  <h1 className="">{item.product.name}</h1>
+                  <h1 className="w-28">{item.product.name}</h1>
                 </div>
-                <h1>${item.product.price}</h1>
+                <h1 className='w-18'>${item.product.price}</h1>
                 <div className="flex items-center gap-2">
                   <button
                     className="border px-2"
@@ -128,7 +155,8 @@ function UserCart() {
                   </button>
                 </div>
                 <h1>${(item.product.price * item.quantity).toFixed(2)}</h1>
-              </div>
+                <MdDelete onClick={() => handleDelete(item.product._id)} className="cursor-pointer text-red-500" />
+                </div>
             ))}
             <div className="px-10 py-4 flex justify-between">
               <input
