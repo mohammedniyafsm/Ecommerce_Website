@@ -88,7 +88,7 @@ const getCart = async (req, res) => {
     
         // Remove the item
         const removedItem = cart.items.splice(itemIndex, 1)[0];
-        
+
         cart.totalAmount -= removedItem.quantity * removedItem.product.price;
     
         await cart.save();
@@ -99,5 +99,48 @@ const getCart = async (req, res) => {
       }
     };
     
-  module.exports = { getCart, addToCart, deleteCartItem };
+
+    // <-------------------------------------------------------| UPDATE CART | -------------------------------------------|>
+
+const updateCart = async (req, res) => {
+  const { productId, quantity } = req.body;
+  const userId = req.user._id; // Assuming user is authenticated
+  
+  try {
+    // Find the cart for the user
+    const cart = await Cart.findOne({ user: userId }).populate('items.product', 'price');
+    if (!cart) {
+      return res.status(404).json({ message: 'Cart not found' });
+    }
+    
+    // Find the item in the cart
+    const itemIndex = cart.items.findIndex(
+      (item) => item.product._id.toString() === productId
+    );
+
+    if (itemIndex === -1) {
+      return res.status(404).json({ message: 'Product not found in cart' });
+    }
+
+    // Get the current item and its price
+    const item = cart.items[itemIndex];
+    const productPrice = item.product.price;
+
+    // Update the quantity
+    const previousQuantity = item.quantity;
+    item.quantity = quantity;
+
+    // Recalculate the total amount by adding and subtracting the price difference
+    cart.totalAmount += (quantity - previousQuantity) * productPrice;
+
+    // Save the updated cart
+    await cart.save();
+
+    res.status(200).json({ message: 'Cart updated successfully', cart });
+  } catch (error) {
+    res.status(500).json({ message: 'Error updating cart', error });
+  }
+};
+
+  module.exports = { getCart, addToCart, deleteCartItem,updateCart };
   
