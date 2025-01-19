@@ -66,7 +66,14 @@ function WishList() {
         <div className="text-center mt-28 mb-64">
           <h2 className="text-2xl font-semibold">No items in your wishlist</h2>
           <p className="text-gray-500">Start adding products to your wishlist now!</p>
+          <button
+          className="mt-4 bg-black text-white px-6 py-2 rounded-lg"
+          onClick={() => navigate('/shop')}
+        >
+          Go to Shop
+        </button>
         </div>
+        
       ) : (
         <div className="mt-28 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 px-28">
           {products.map((item) => (
