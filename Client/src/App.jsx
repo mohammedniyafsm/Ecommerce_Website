@@ -10,6 +10,8 @@ import Account from './Component/User/Account';
 import AllProduct from './Pages/Admin/AllProduct';
 import AllProductList from './Pages/User/AllProductList';
 import WishlistPage from './Pages/User/WishlistPage';
+import CheckOut from './Pages/User/Checkout';
+import AddressPage from './Pages/User/AddressPage';
 
 
 function App() {
@@ -25,6 +27,8 @@ function App() {
     <Route path="/account" element={<Account/>}/>
     <Route path="/shop" element={<AllProductList/>}/>
     <Route path="/wishList" element={<WishlistPage/>}/>
+    <Route path="/checkOut" element={<CheckOut/>}/>
+    <Route path="/addAddress" element={<AddressPage/>}/>
 
     {/* admin pages */}
     <Route path="/adminHome" element={<AdminHome />} />
