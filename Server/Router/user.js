@@ -3,7 +3,8 @@ const router = express.Router();
 const {
     Signup,
     verifyOtp,
-    Login
+    Login,
+    getUserDetails,
 } = require('../Controller/userController');
 const {
     allProduct,
@@ -40,6 +41,7 @@ const { protect } = require('../Middleware/AuthMiddleware');
 router.route('/signup').post(Signup); // Create Account
 router.route('/login').post(Login); // Login Account 
 router.route('/verifyOtp').post(verifyOtp); // OTP Verification
+router.route('/userDetail').get(protect,getUserDetails); // User Details
 
 // Product routes
 router.route('/allProduct').get(allProduct); // Getting ALL Products
