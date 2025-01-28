@@ -92,4 +92,32 @@ const verifyOtp = async (req, res) => {
     }
 };
 
-module.exports = { Signup, Login, verifyOtp };
+const getUserDetails = async (req, res) => {
+    try {
+        const userId = req.user.id; // Extract user ID from the authenticated request
+        const user = await User.findById(userId); // Use findById for a single user
+
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        return res.status(200).json({
+            message: 'User details fetched successfully',
+            user: {
+                id: user._id,
+                name: user.username,
+                email: user.email,
+                phone: user.phone,
+                isAdmin: user.isAdmin,
+            },
+        });
+    } catch (error) {
+        console.error('Error fetching user details:', error.message);
+        return res.status(500).json({ success: false, message: 'Server error' });
+    }
+};
+
+
+
+
+module.exports = { Signup, Login, verifyOtp,getUserDetails };
