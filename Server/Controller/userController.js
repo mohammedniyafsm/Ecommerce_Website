@@ -122,11 +122,11 @@ const getUserDetails = async (req, res) => {
 const updateUser = async (req, res) => {
   try {
     const { id } = req.user; 
-    const { name, email, phone } = req.body; 
+    const { username, email, phone } = req.body; 
 
     const updatedUser = await User.findByIdAndUpdate(
       id,
-      { name, email, phone },
+      { username, email, phone },
       { new: true } // Return the updated document
     );
 
