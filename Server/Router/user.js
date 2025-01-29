@@ -5,6 +5,7 @@ const {
     verifyOtp,
     Login,
     getUserDetails,
+    updateUser,
 } = require('../Controller/userController');
 const {
     allProduct,
@@ -42,6 +43,7 @@ router.route('/signup').post(Signup); // Create Account
 router.route('/login').post(Login); // Login Account 
 router.route('/verifyOtp').post(verifyOtp); // OTP Verification
 router.route('/userDetail').get(protect,getUserDetails); // User Details
+router.route('/userDetail').put(protect,updateUser ); // User update Details
 
 // Product routes
 router.route('/allProduct').get(allProduct); // Getting ALL Products

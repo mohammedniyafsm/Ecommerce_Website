@@ -94,8 +94,8 @@ const verifyOtp = async (req, res) => {
 
 const getUserDetails = async (req, res) => {
     try {
-        const userId = req.user.id; // Extract user ID from the authenticated request
-        const user = await User.findById(userId); // Use findById for a single user
+        const userId = req.user.id; 
+        const user = await User.findById(userId); 
 
         if (!user) {
             return res.status(404).json({ message: 'User not found' });
@@ -119,5 +119,28 @@ const getUserDetails = async (req, res) => {
 
 
 
+const updateUser = async (req, res) => {
+  try {
+    const { id } = req.user; 
+    const { name, email, phone } = req.body; 
 
-module.exports = { Signup, Login, verifyOtp,getUserDetails };
+    const updatedUser = await User.findByIdAndUpdate(
+      id,
+      { name, email, phone },
+      { new: true } // Return the updated document
+    );
+
+    if (!updatedUser) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    res.status(200).json({ message: "User updated successfully", updatedUser });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+
+
+
+module.exports = { Signup, Login, verifyOtp,getUserDetails,updateUser  };
