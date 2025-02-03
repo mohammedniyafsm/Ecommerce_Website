@@ -105,7 +105,7 @@ const getUserDetails = async (req, res) => {
             message: 'User details fetched successfully',
             user: {
                 id: user._id,
-                name: user.username,
+                username: user.username,
                 email: user.email,
                 phone: user.phone,
                 isAdmin: user.isAdmin,

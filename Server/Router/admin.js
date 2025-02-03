@@ -17,6 +17,11 @@ const {
     isAdmin
 } = require('../Middleware/AuthMiddleware');
 
+const {
+    getAllOrders,
+    updateOrderStatus,
+} = require('../Controller/orderController');
+
 const uploadMiddleware = require("../Middleware/uploadMiddleware");
 const upload = uploadMiddleware("Categories");
 
@@ -32,6 +37,10 @@ router.route('/categories/:id').delete(protect,isAdmin,deleteCategory);// Delete
 //Product operation
 router.route('/addProduct').post(upload.array("images",4),protect, isAdmin,addProduct);// Adding product
 router.route('/product').get(protect,isAdmin,getProduct);// Adding product
+
+
+router.route('/orders').get(protect, isAdmin, getAllOrders);
+router.route('/order/update').put(protect, isAdmin, updateOrderStatus);
 
 
 

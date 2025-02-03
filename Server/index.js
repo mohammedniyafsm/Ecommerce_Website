@@ -1,5 +1,6 @@
 const express=require('express');
 const app=express();
+const dotenv = require('dotenv');
 const connectDB=require('./Config/db');
 const userRoute=require('./Router/user');
 const adminRoute=require('./Router/admin');
@@ -7,6 +8,7 @@ const cors = require('cors');
 
 
 connectDB();
+dotenv.config();
 
 const corsOption = {
     origin: "http://localhost:5173",

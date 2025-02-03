@@ -33,6 +33,7 @@ const {
     createOrder,
     verifyOrder,
     getUserOrders,
+    cancelOrder,
 } = require('../Controller/orderController'); 
 
 const { protect } = require('../Middleware/AuthMiddleware');
@@ -70,6 +71,7 @@ router.route('/address/:id').delete(protect, deleteAddress); // Delete Address
 
 router.route('/order/create').post(protect,createOrder);
 router.route('/order/verify').post(protect,verifyOrder);
-router.route('/getUserOrders').get(protect,getUserOrders);
+router.route('/order/user-orders').get(protect, getUserOrders);
+router.route('/order/cancel').put(protect, cancelOrder);
 
 module.exports = router;

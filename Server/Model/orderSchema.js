@@ -1,89 +1,84 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-const orderSchema = new Schema(
-  {
+
+
+const orderSchema = new Schema({
     userId: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'User',
-      required: true,
+        type: String,
+        required: true,
+        index: true 
     },
-    items: [
-      {
-        productId: { type: mongoose.Schema.Types.ObjectId, ref: 'Product', required: true },
+    items: [{
+        PrdId:{ type: String, required: true },
         name: { type: String, required: true },
         category: { type: String, required: true },
-        images: { type: String, required: true },
-        subCategory: { type: String, required: true },
+        images:{ type: String, required: true },
         price: { type: Number, required: true },
         description: { type: String, required: true },
-        quantity: { type: Number, required: true },
-      },
-    ],
-    address: {
-      firstName: { type: String, required: true },
-      lastName: { type: String, required: true },
-      landmark: { type: String },
-      addressDetail: { type: String, required: true },
-      state: { type: String, required: true },
-      zip: { type: Number, required: true },
-      phone: { type: String, required: true, match: /^[0-9]{10}$/ }, // Validation for 10-digit phone numbers
+        quantity: { type: Number, required: true }
+    }],
+    address:  {
+            firstName: String,
+            lastName: String,
+            landmark: String,
+            addressDetail: String,
+            state: String,
+            zip: Number,
+            phone: Number
+        }
+    ,
+    totalprice:{
+       type: Number
     },
-    totalPrice: {
-      type: Number,
-      required: true,
+    totalAmount:{
+       type: Number
     },
     totalPaid: {
-      type: Number,
-      default: 0, // Default to unpaid
+       type: Number
     },
+    
     paymentStatus: {
-      type: String,
-      enum: ['pending', 'completed', 'failed'],
-      default: 'pending',
+        type: String
     },
-    paymentMethod: {
-      type: String,
-      enum: ['Credit Card', 'Debit Card', 'Cash on Delivery', 'UPI', 'Net Banking'],
+    PaymentMethod: {
+        type: String
     },
-    deliveryStatus: {
-      type: String,
-      enum: ['pending', 'shipped', 'delivered', 'cancelled'],
-      default: 'pending',
+    deliveryStatus:{
+        type: String,
+        default: 'pending'
     },
-    orderStatus: {
-      type: String,
-      enum: ['pending', 'processed', 'completed', 'cancelled'],
-      default: 'pending',
+    orderStatus:{
+        type: String,
+        default: 'pending'
+        
     },
     canceled: {
-      type: Boolean,
-      default: false,
+        type: Boolean,
+        default: false
     },
     returned: {
-      type: Boolean,
-      default: false,
+        type: Boolean,
+        default: false
     },
-    returnApproval: {
+    returnApprovel:{
       type: Boolean,
-      default: false,
+      default: false
     },
     deliveredAt: {
-      type: Date,
-      default: null,
+        type: Date,
+        default: null
     },
     createdAt: {
-      type: Date,
-      default: Date.now,
+        type: Date,
+        default: Date.now,
     },
-    verified: {
-      type: Boolean,
-      default: false,
-    },
-  },
-  { timestamps: true } // Automatically adds `createdAt` and `updatedAt`
-);
+    verify: {
+        type: Boolean,
+        default: false
+    }
+});
 
-const Order = mongoose.model('Order', orderSchema);
+const order = mongoose.model("order",orderSchema)
 
-module.exports = Order;
+module.exports = order;

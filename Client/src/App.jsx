@@ -6,12 +6,14 @@ import EmailOtp from "./Component/User/Login-Signup/EmailOtp";
 import AdminHome from "./Pages/Admin/Homeadmin";
 import Cart from "./Pages/User/Cart";
 import SingleProduct from "./Pages/User/SingleProduct";
-import Account from './Component/User/Account';
+import Account from './Pages/User/AccountUser';
 import AllProduct from './Pages/Admin/AllProduct';
 import AllProductList from './Pages/User/AllProductList';
 import WishlistPage from './Pages/User/WishlistPage';
 import CheckOut from './Pages/User/Checkout';
 import AddressPage from './Pages/User/AddressPage';
+import Order from './Component/User/Order';
+import Address from './Component/User/Address';
 
 
 function App() {
@@ -29,6 +31,8 @@ function App() {
     <Route path="/wishList" element={<WishlistPage/>}/>
     <Route path="/checkOut" element={<CheckOut/>}/>
     <Route path="/addAddress" element={<AddressPage/>}/>
+    <Route path="/order" element={<Order/>}/>
+    <Route path="/address" element={<Address/>}/>
 
     {/* admin pages */}
     <Route path="/adminHome" element={<AdminHome />} />
